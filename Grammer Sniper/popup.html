@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<!--
+  @copyright This code belongs to Solo Hunters Open Source Community
+-->
+<html>
+<head>
+  <title>Grammar Sniper</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+  <style>
+    body {
+      width: 340px;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f9fafb;
+      color: #374151;
+    }
+    
+    .container {
+      padding: 24px;
+    }
+    
+    .header {
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    
+    h1 {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0;
+      color: #111827;
+    }
+    
+    .subtitle {
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    
+    .input-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #4b5563;
+    }
+    
+    input[type="text"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 14px;
+      background-color: #f9fafb;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+    }
+    
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #6366f1;
+      background-color: white;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+    
+    button {
+      width: 100%;
+      background-color: #6366f1;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    button:hover {
+      background-color: #4f46e5;
+      transform: translateY(-1px);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    .status {
+      text-align: center;
+      margin-top: 16px;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .status.visible {
+      opacity: 1;
+    }
+    
+    .success {
+      background-color: #ecfdf5;
+      color: #065f46;
+    }
+    
+    .error {
+      background-color: #fef2f2;
+      color: #991b1b;
+    }
+    
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 16px;
+    }
+    
+    /* Accordion Styles */
+    .accordion {
+      margin-bottom: 16px;
+      border-radius: 12px;
+      overflow: hidden;
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    
+    .accordion-header {
+      background-color: white;
+      padding: 16px;
+      font-weight: 500;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s ease;
+      border-bottom: 1px solid #f3f4f6;
+      position: relative;
+    }
+    
+    .accordion-header:hover {
+      background-color: #f9fafb;
+    }
+    
+    .accordion-arrow {
+      position: relative;
+      width: 14px;
+      height: 14px;
+      transition: transform 0.3s ease;
+    }
+    
+    .accordion-arrow::before, 
+    .accordion-arrow::after {
+      content: '';
+      position: absolute;
+      background-color: #6b7280;
+      border-radius: 2px;
+      transition: all 0.2s ease;
+    }
+    
+    .accordion-arrow::before {
+      width: 10px;
+      height: 2px;
+      top: 6px;
+      left: 2px;
+    }
+    
+    .accordion-arrow::after {
+      width: 2px;
+      height: 10px;
+      top: 2px;
+      left: 6px;
+    }
+    
+    .accordion-header.active .accordion-arrow::after {
+      transform: scaleY(0);
+    }
+    
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      padding: 0 16px;
+      background-color: white;
+    }
+    
+    .accordion-content.active {
+      max-height: 500px;
+      padding: 16px;
+    }
+    
+    /* Toggle Switch Styles */
+    .toggle-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+    
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #e5e7eb;
+      transition: .4s;
+      border-radius: 24px;
+    }
+    
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    input:checked + .toggle-slider {
+      background-color: #6366f1;
+    }
+    
+    input:checked + .toggle-slider:before {
+      transform: translateX(20px);
+    }
+    
+    .coming-soon {
+      font-size: 11px;
+      font-weight: 500;
+      color: #f59e0b;
+      margin-left: 8px;
+      padding: 2px 6px;
+      background-color: #fffbeb;
+      border-radius: 4px;
+    }
+    
+    .model-disabled {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+    
+    /* Improvements for model selection */
+    .model-name {
+      font-weight: 500;
+      color: #111827;
+    }
+    
+    /* Add separator between accordions */
+    .accordion + .accordion {
+      margin-top: 12px;
+    }
+    
+    /* Button improvements */
+    button {
+      margin-top: 8px;
+      background: linear-gradient(to right, #6366f1, #4f46e5);
+      border-radius: 10px;
+      box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.1), 0 2px 4px -1px rgba(99, 102, 241, 0.06);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Grammar Sniper</h1>
+      <div class="subtitle">Grammar & spelling correction</div>
+    </div>
+    
+    <div class="accordion">
+      <div class="accordion-header active" id="geminiHeader">
+        <div class="toggle-label">
+          <span class="model-name">Google Gemini</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="geminiToggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="accordion-arrow"></div>
+      </div>
+      <div class="accordion-content active" id="geminiContent">
+        <div class="input-group">
+          <label for="apiKey">Google API Key</label>
+          <input type="text" id="apiKey" placeholder="Enter your Google API key">
+        </div>
+      </div>
+    </div>
+    
+    <div class="accordion">
+      <div class="accordion-header" id="claudeHeader">
+        <div class="toggle-label">
+          <span class="model-name">Anthropic Claude</span>
+          <span class="coming-soon">Coming Soon</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="claudeToggle" disabled>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="accordion-arrow"></div>
+      </div>
+      <div class="accordion-content" id="claudeContent">
+        <div class="input-group model-disabled">
+          <label for="claudeKey">Claude API Key</label>
+          <input type="text" id="claudeKey" placeholder="Enter your Claude API key" disabled>
+        </div>
+      </div>
+    </div>
+    
+    <div class="accordion">
+      <div class="accordion-header" id="openaiHeader">
+        <div class="toggle-label">
+          <span class="model-name">OpenAI</span>
+          <span class="coming-soon">Coming Soon</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="openaiToggle" disabled>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="accordion-arrow"></div>
+      </div>
+      <div class="accordion-content" id="openaiContent">
+        <div class="input-group model-disabled">
+          <label for="openaiKey">OpenAI API Key</label>
+          <input type="text" id="openaiKey" placeholder="Enter your OpenAI API key" disabled>
+        </div>
+      </div>
+    </div>
+    
+    <div class="accordion">
+      <div class="accordion-header" id="groqHeader">
+        <div class="toggle-label">
+          <span class="model-name">Groq</span>
+          <span class="coming-soon">Coming Soon</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="groqToggle" disabled>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="accordion-arrow"></div>
+      </div>
+      <div class="accordion-content" id="groqContent">
+        <div class="input-group model-disabled">
+          <label for="groqKey">Groq API Key</label>
+          <input type="text" id="groqKey" placeholder="Enter your Groq API key" disabled>
+        </div>
+      </div>
+    </div>
+    
+    <button id="saveKey">
+      Save API Key
+    </button>
+    
+    <div id="status" class="status"></div>
+    
+    <!-- <div class="footer">
+      Powered by Google API
+    </div> -->
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html> 
